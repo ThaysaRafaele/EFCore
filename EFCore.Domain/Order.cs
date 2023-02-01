@@ -11,7 +11,7 @@ namespace EFCore.Domain
         public int Id { get; set; }
         public int OrderNumber { get; set; }
         public DateTime DateCreated { get; set; }
-        public List<Item> Items { get; set; }
+        public List<OrderItem> OrdersItems { get; set; }
         public int ClientId { get; set; }
         public Client Client { get; set; }
     }

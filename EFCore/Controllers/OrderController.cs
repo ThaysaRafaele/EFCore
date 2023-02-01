@@ -8,21 +8,22 @@ namespace EFCore.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ClientController : Controller
+    public class OrderController : Controller
     {
+
         private readonly Context _context;
-        public ClientController(Context context)
+        public OrderController(Context context)
         {
             _context = context;
         }
 
-        // GET: ClientController
+        // GET: OrderController
         [HttpGet]
         public ActionResult Index()
         {
             try
             {
-                return Ok(new Client());
+                return Ok(new Order());
             }
             catch (Exception ex)
             {
@@ -30,26 +31,25 @@ namespace EFCore.WebApi.Controllers
             }
         }
 
-        // GET: ClientController/Details/5
-        //[HttpGet("{id}", Name = "Details")]
+        // GET: OrderController/Details/5
         //public ActionResult Details(int id)
         //{
-        //    return Ok("value");
+        //    return View();
         //}
 
-        //// GET: ClientController/Create
+        // GET: OrderController/Create
         //public ActionResult Create()
         //{
         //    return View();
         //}
 
-        // POST: ClientController/Post
+        // POST: OrderController/Create
         [HttpPost]
-        public ActionResult Create(Client modelClient)
+        public ActionResult Create(Order model)
         {
             try
             {
-                _context.Clients.Add(modelClient);
+                _context.Orders.Add(model);
                 _context.SaveChanges();
 
                 return Ok("Funcionou");
@@ -60,40 +60,28 @@ namespace EFCore.WebApi.Controllers
             }
         }
 
-        //// GET: ClientController/Edit/5
+        // GET: OrderController/Edit/5
         //public ActionResult Edit(int id)
         //{
         //    return View();
         //}
 
-        // PUT: ClientController/Edit/5
-        [HttpPut("{id}")]
-        public ActionResult Update(int id, Client model)
+        // PUT: OrderController/Edit/5
+        [HttpPut]
+        public ActionResult Edit(int id, Order model)
         {
             try
             {
-                if(_context.Clients
+                if (_context.Orders
                     .AsNoTracking()
-                    .FirstOrDefault(c => c.Id == id) != null)
+                    .FirstOrDefault(o => o.Id == id) != null)
                 {
-                    _context.Clients.Update(model);
+                    _context.Update(model);
                     _context.SaveChanges();
                     return Ok("Funcionou");
                 }
 
-                //var client = new Client
-                //{
-                //    Id = id,
-                //    Name = "Cliente Teste Alterado",
-                //    Email = "testeAlterado@email.com",
-                //    Orders = new List<Order>
-                //    {
-                //        new Order { Id = 1, OrderNumber = 12 },
-                //        new Order { Id = 2, OrderNumber = 123 }
-                //    }
-                //};
-
-                return Ok("Não Encontrado");
+                return Ok("Não encontrado");
             }
             catch (Exception ex)
             {
@@ -101,13 +89,13 @@ namespace EFCore.WebApi.Controllers
             }
         }
 
-        //// GET: ClientController/Delete/5
+        // GET: OrderController/Delete/5
         //public ActionResult Delete(int id)
         //{
         //    return View();
         //}
 
-        //// POST: ClientController/Delete/5
+        // POST: OrderController/Delete/5
         [HttpDelete]
         public void Delete(int id)
         {

@@ -11,9 +11,6 @@ namespace EFCore.Domain
         public int Id { get; set; }
         public string Name { get; set; }
         public double UnitPrice { get; set; }
-        public int ClientId { get; set; }
-        public Client Client { get; set; }
-        public int OrderId { get; set; }
-        public Order Order { get; set; }
+        public List<OrderItem> OrdersItems { get; set; }
     }
 }

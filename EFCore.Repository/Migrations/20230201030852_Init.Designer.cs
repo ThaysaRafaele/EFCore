@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EFCore.Repository.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20230131193840_Initial")]
-    partial class Initial
+    [Migration("20230201030852_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,24 +54,14 @@ namespace EFCore.Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ClientId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
 
                     b.Property<double>("UnitPrice")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("OrderId");
 
                     b.ToTable("Items");
                 });
@@ -100,23 +90,19 @@ namespace EFCore.Repository.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("EFCore.Domain.Item", b =>
+            modelBuilder.Entity("EFCore.Domain.OrderItem", b =>
                 {
-                    b.HasOne("EFCore.Domain.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
 
-                    b.HasOne("EFCore.Domain.Order", "Order")
-                        .WithMany("Items")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
 
-                    b.Navigation("Client");
+                    b.HasKey("OrderId", "ItemId");
 
-                    b.Navigation("Order");
+                    b.HasIndex("ItemId");
+
+                    b.ToTable("OrdersItems");
                 });
 
             modelBuilder.Entity("EFCore.Domain.Order", b =>
@@ -124,10 +110,28 @@ namespace EFCore.Repository.Migrations
                     b.HasOne("EFCore.Domain.Client", "Client")
                         .WithMany("Orders")
                         .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("EFCore.Domain.OrderItem", b =>
+                {
+                    b.HasOne("EFCore.Domain.Item", "Item")
+                        .WithMany("OrdersItems")
+                        .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Client");
+                    b.HasOne("EFCore.Domain.Order", "Order")
+                        .WithMany("OrdersItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("EFCore.Domain.Client", b =>
@@ -135,9 +139,14 @@ namespace EFCore.Repository.Migrations
                     b.Navigation("Orders");
                 });
 
+            modelBuilder.Entity("EFCore.Domain.Item", b =>
+                {
+                    b.Navigation("OrdersItems");
+                });
+
             modelBuilder.Entity("EFCore.Domain.Order", b =>
                 {
-                    b.Navigation("Items");
+                    b.Navigation("OrdersItems");
                 });
 #pragma warning restore 612, 618
         }
