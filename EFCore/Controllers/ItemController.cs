@@ -2,28 +2,27 @@
 using EFCore.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace EFCore.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class OrderController : Controller
+    public class ItemController : Controller
     {
         private readonly IEFCoreRepository _repo;
-        public OrderController(IEFCoreRepository repo)
+        public ItemController(IEFCoreRepository repo)
         {
             _repo = repo;
         }
 
-        // GET: OrderController
+        // GET: ItemController
         [HttpGet]
         public async Task<IActionResult> Index()
         {
             try
             {
-                var order = await _repo.GetAllOrders(true);
-                return Ok(order);
+                var item = await _repo.GetAllItems(true);
+                return Ok(item);
             }
             catch (Exception ex)
             {
@@ -31,14 +30,14 @@ namespace EFCore.WebApi.Controllers
             }
         }
 
-        // GET: api/Order/5
-        [HttpGet("{id}", Name = "GetOrder")]
-        public async Task<IActionResult> GetOrderById(int id)
+        // GET: api/Item/5
+        [HttpGet("{id}", Name = "GetItem")]
+        public async Task<IActionResult> GetItemById(int id)
         {
             try
             {
-                var order = await _repo.GetOrderById(id);
-                return Ok(order);
+                var item = await _repo.GetItemById(id);
+                return Ok(item);
             }
             catch (Exception ex)
             {
@@ -46,14 +45,14 @@ namespace EFCore.WebApi.Controllers
             }
         }
 
-        // GET: api/Order/555
-        [HttpGet("{number}", Name = "GetByOrderNumber")]
-        public async Task<IActionResult> GetByOrderNumber(int number)
+        // GET: api/Item/555
+        [HttpGet("{name}", Name = "GetByItemName")]
+        public async Task<IActionResult> GetByItemName(string name)
         {
             try
             {
-                var order = await _repo.GetOrderByNumber(number);
-                return Ok(order);
+                var item = await _repo.GetItemByName(name);
+                return Ok(item);
             }
             catch (Exception ex)
             {
@@ -61,15 +60,15 @@ namespace EFCore.WebApi.Controllers
             }
         }
 
-        // POST: OrderController/Create
+        // POST: ItemController/Create
         [HttpPost]
-        public async Task<IActionResult> Create(Order model)
+        public async Task<IActionResult> Create(Item model)
         {
             try
             {
                 _repo.Add(model);
 
-                if(await _repo.SaveChangeAsync())
+                if (await _repo.SaveChangeAsync())
                     return Ok("Registro salvo com sucesso!");
             }
             catch (Exception ex)
@@ -80,15 +79,15 @@ namespace EFCore.WebApi.Controllers
             return BadRequest("Não foi possível salvar o registro.");
         }
 
-        // PUT: OrderController/Edit/5
+        // PUT: ItemController/Edit/5
         [HttpPut]
-        public async Task<IActionResult> Edit(int id, Order model)
+        public async Task<IActionResult> Edit(int id, Item model)
         {
             try
             {
-                var order = await _repo.GetOrderById(id);
-                
-                if (order != null)
+                var item = await _repo.GetItemById(id);
+
+                if (item != null)
                 {
                     _repo.Update(model);
 
@@ -104,16 +103,16 @@ namespace EFCore.WebApi.Controllers
             return BadRequest("Não foi possível alterar o registro.");
         }
 
-        // POST: OrderController/Delete/5
+        // POST: ItemController/Delete/5
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
-        {            
+        {
             try
-            {  
-                var order = await _repo.GetOrderById(id);              
-                if (order != null)
+            {
+                var item = await _repo.GetItemById(id);
+                if (item != null)
                 {
-                    _repo.Delete(order);
+                    _repo.Delete(item);
 
                     if (await _repo.SaveChangeAsync())
                         return Ok("Registro deletado com sucesso!");

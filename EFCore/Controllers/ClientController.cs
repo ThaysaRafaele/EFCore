@@ -22,7 +22,7 @@ namespace EFCore.WebApi.Controllers
         {
             try
             {
-                var client = await _repository.GetAllClients();
+                var client = await _repository.GetAllClients(true);
 
                 return Ok(client);
             }
@@ -39,6 +39,22 @@ namespace EFCore.WebApi.Controllers
             try
             {
                 var client = await _repository.GetClientById(id);
+
+                return Ok(client);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex}");
+            }
+        }
+
+        // GET: ClientController/Details/name
+        [HttpGet("{name}", Name = "GetByName")]
+        public async Task<IActionResult> GetByName(string name)
+        {
+            try
+            {
+                var client = await _repository.GetClientByName(name);
 
                 return Ok(client);
             }
