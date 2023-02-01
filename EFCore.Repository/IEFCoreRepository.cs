@@ -22,5 +22,9 @@ namespace EFCore.Repository
         Task<IEnumerable<Order>> GetAllOrders(bool includeItems = false);
         Task<Order> GetOrderById(int id, bool includeItems = false);
         Task<Order[]> GetOrderByNumber(int number);
+
+        Task<IEnumerable<Item>> GetAllItems(bool includeOrdes = false);
+        Task<Item> GetItemById(int id, bool includeOrdes = false);
+        Task<Item[]> GetItemByName(string name);
     }
 }

@@ -110,5 +110,39 @@ namespace EFCore.Repository
 
             return await query.ToArrayAsync();
         }
+
+        public async Task<IEnumerable<Item>> GetAllItems(bool includeOrdes = false)
+        {
+            IQueryable<Item> query = _context.Items;
+
+            if (includeOrdes)
+            {
+                query = _context.Items.Include(i => i.OrdersItems);
+            }
+
+            query = query.AsNoTracking().OrderBy(i => i.Id);
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<Item> GetItemById(int id, bool includeOrdes = false)
+        {
+            IQueryable<Item> query = _context.Items;
+
+            query = query.AsNoTracking().OrderBy(i => i.Id);
+
+            return await query.FirstOrDefaultAsync(i => i.Id == id);
+        }
+
+        public async Task<Item[]> GetItemByName(string name)
+        {
+            IQueryable<Item> query = _context.Items;
+
+            query = query.AsNoTracking()
+                .Where(i => i.Name.Contains(name))
+                .OrderBy(i => i.Id);
+
+            return await query.ToArrayAsync();
+        }
     }
 }
