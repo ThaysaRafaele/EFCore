@@ -48,7 +48,7 @@ namespace EFCore.WebApi.Controllers
             }
         }
 
-        // GET: ClientController/Details/name
+        // GET: ClientController/GetByName/name
         [HttpGet("{name}", Name = "GetByName")]
         public async Task<IActionResult> GetByName(string name)
         {
