@@ -9,6 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCore.Domain", "..\EFCore.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCore.Repository", "..\EFCore.Repository\EFCore.Repository.csproj", "{D4420DC6-30E9-4E46-A5F5-27EF3072CD83}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DE7D8728-D2B3-4641-912E-A05BF847AD6F}"
+	ProjectSection(SolutionItems) = preProject
+		Startup.cs = Startup.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

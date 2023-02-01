@@ -10,20 +10,20 @@ namespace EFCore.WebApi.Controllers
     [Route("api/[controller]")]
     public class OrderController : Controller
     {
-
-        private readonly Context _context;
-        public OrderController(Context context)
+        private readonly IEFCoreRepository _repo;
+        public OrderController(IEFCoreRepository repo)
         {
-            _context = context;
+            _repo = repo;
         }
 
         // GET: OrderController
         [HttpGet]
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
             try
             {
-                return Ok(new Order());
+                var order = await _repo.GetAllOrders();
+                return Ok(order);
             }
             catch (Exception ex)
             {
@@ -31,74 +31,86 @@ namespace EFCore.WebApi.Controllers
             }
         }
 
-        // GET: OrderController/Details/5
-        //public ActionResult Details(int id)
-        //{
-        //    return View();
-        //}
-
-        // GET: OrderController/Create
-        //public ActionResult Create()
-        //{
-        //    return View();
-        //}
+        // GET: api/Order/5
+        [HttpGet("{id}", Name = "GetOrder")]
+        public async Task<IActionResult> GetOrderById(int id)
+        {
+            try
+            {
+                var order = await _repo.GetOrderById(id);
+                return Ok(order);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex}");
+            }
+        }
 
         // POST: OrderController/Create
         [HttpPost]
-        public ActionResult Create(Order model)
+        public async Task<IActionResult> Create(Order model)
         {
             try
             {
-                _context.Orders.Add(model);
-                _context.SaveChanges();
+                _repo.Add(model);
 
-                return Ok("Funcionou");
+                if(await _repo.SaveChangeAsync())
+                    return Ok("Registro salvo com sucesso!");
             }
             catch (Exception ex)
             {
                 return BadRequest($"Error: {ex}");
             }
-        }
 
-        // GET: OrderController/Edit/5
-        //public ActionResult Edit(int id)
-        //{
-        //    return View();
-        //}
+            return BadRequest("Não foi possível salvar o registro.");
+        }
 
         // PUT: OrderController/Edit/5
         [HttpPut]
-        public ActionResult Edit(int id, Order model)
+        public async Task<IActionResult> Edit(int id, Order model)
         {
             try
             {
-                if (_context.Orders
-                    .AsNoTracking()
-                    .FirstOrDefault(o => o.Id == id) != null)
+                var order = await _repo.GetOrderById(id);
+                
+                if (order != null)
                 {
-                    _context.Update(model);
-                    _context.SaveChanges();
-                    return Ok("Funcionou");
-                }
+                    _repo.Update(model);
 
-                return Ok("Não encontrado");
+                    if (await _repo.SaveChangeAsync())
+                        return Ok("Registro alterado com sucesso!");
+                }
             }
             catch (Exception ex)
             {
                 return BadRequest($"Error: {ex}");
             }
-        }
 
-        // GET: OrderController/Delete/5
-        //public ActionResult Delete(int id)
-        //{
-        //    return View();
-        //}
+            return BadRequest("Não foi possível alterar o registro.");
+        }
 
         // POST: OrderController/Delete/5
         [HttpDelete]
-        public void Delete(int id)
-        {
+        public async Task<IActionResult> Delete(int id)
+        {            
+            try
+            {  
+                var order = await _repo.GetOrderById(id);              
+                if (order != null)
+                {
+                    _repo.Delete(order);
+
+                    if (await _repo.SaveChangeAsync())
+                        return Ok("Registro deletado com sucesso!");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex}");
+            }
+
+            return BadRequest("Não foi possível deletar o registro.");
+
         }
     }
 }

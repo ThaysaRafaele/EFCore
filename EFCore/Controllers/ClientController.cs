@@ -10,19 +10,21 @@ namespace EFCore.WebApi.Controllers
     [Route("api/[controller]")]
     public class ClientController : Controller
     {
-        private readonly Context _context;
-        public ClientController(Context context)
+        private readonly IEFCoreRepository _repository;
+        public ClientController(IEFCoreRepository repo)
         {
-            _context = context;
+            _repository = repo;
         }
 
         // GET: ClientController
         [HttpGet]
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
             try
             {
-                return Ok(new Client());
+                var client = await _repository.GetAllClients();
+
+                return Ok(client);
             }
             catch (Exception ex)
             {
@@ -31,86 +33,86 @@ namespace EFCore.WebApi.Controllers
         }
 
         // GET: ClientController/Details/5
-        //[HttpGet("{id}", Name = "Details")]
-        //public ActionResult Details(int id)
-        //{
-        //    return Ok("value");
-        //}
+        [HttpGet("{id}", Name = "Details")]
+        public async Task<IActionResult> GetClientById(int id)
+        {
+            try
+            {
+                var client = await _repository.GetClientById(id);
 
-        //// GET: ClientController/Create
-        //public ActionResult Create()
-        //{
-        //    return View();
-        //}
+                return Ok(client);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex}");
+            }
+        }
 
         // POST: ClientController/Post
         [HttpPost]
-        public ActionResult Create(Client modelClient)
+        public async Task<IActionResult> Create(Client modelClient)
         {
             try
             {
-                _context.Clients.Add(modelClient);
-                _context.SaveChanges();
+                _repository.Add(modelClient);
 
-                return Ok("Funcionou");
+                if (await _repository.SaveChangeAsync())
+                    return Ok("Registro salvo com sucesso!");
             }
             catch (Exception ex)
             {
                 return BadRequest($"Error: {ex}");
             }
-        }
 
-        //// GET: ClientController/Edit/5
-        //public ActionResult Edit(int id)
-        //{
-        //    return View();
-        //}
+            return BadRequest("Não foi possível salvar o registro.");
+        }
 
         // PUT: ClientController/Edit/5
         [HttpPut("{id}")]
-        public ActionResult Update(int id, Client model)
+        public async Task<IActionResult> Update(int id, Client model)
         {
             try
             {
-                if(_context.Clients
-                    .AsNoTracking()
-                    .FirstOrDefault(c => c.Id == id) != null)
+                var client = await _repository.GetClientById(id);
+
+                if (client != null)
                 {
-                    _context.Clients.Update(model);
-                    _context.SaveChanges();
-                    return Ok("Funcionou");
-                }
+                    _repository.Update(model);
 
-                //var client = new Client
-                //{
-                //    Id = id,
-                //    Name = "Cliente Teste Alterado",
-                //    Email = "testeAlterado@email.com",
-                //    Orders = new List<Order>
-                //    {
-                //        new Order { Id = 1, OrderNumber = 12 },
-                //        new Order { Id = 2, OrderNumber = 123 }
-                //    }
-                //};
-
-                return Ok("Não Encontrado");
+                    if (await _repository.SaveChangeAsync())
+                        return Ok("Registro alterado com sucesso!");
+                }                
             }
             catch (Exception ex)
             {
                 return BadRequest($"Error: {ex}");
             }
+
+            return BadRequest("Não foi possível alterar o registro.");
         }
 
-        //// GET: ClientController/Delete/5
-        //public ActionResult Delete(int id)
-        //{
-        //    return View();
-        //}
 
-        //// POST: ClientController/Delete/5
+        // POST: ClientController/Delete/5
         [HttpDelete]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            try
+            {
+                var client = await _repository.GetClientById(id);
+                if (client != null)
+                {
+                    _repository.Delete(client);
+
+                    if (await _repository.SaveChangeAsync())
+                        return Ok("Registro deletado com sucesso!");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex}");
+            }
+
+            return BadRequest("Não foi possível deletar o registro.");
         }
     }
 }
