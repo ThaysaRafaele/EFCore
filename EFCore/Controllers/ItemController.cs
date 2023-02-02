@@ -15,49 +15,49 @@ public class ItemController : Controller
     }
 
     // GET: ItemController
-    //[HttpGet]
-    //public async Task<IActionResult> Index()
-    //{
-    //    try
-    //    {
-    //        var item = await _repo.GetAllItems(true);
-    //        return Ok(item);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return BadRequest($"Error: {ex}");
-    //    }
-    //}
+    [HttpGet]
+    public async Task<IActionResult> Index()
+    {
+        try
+        {
+            var item = await _service.GetAll();
+            return Ok(item);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error: {ex}");
+        }
+    }
 
     //// GET: api/Item/5
-    //[HttpGet("{id}", Name = "GetItem")]
-    //public async Task<IActionResult> GetItemById(int id)
-    //{
-    //    try
-    //    {
-    //        var item = await _repo.GetItemById(id);
-    //        return Ok(item);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return BadRequest($"Error: {ex}");
-    //    }
-    //}
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetItemById(int id)
+    {
+        try
+        {
+            var item = await _service.GetByIdAsync(id);
+            return Ok(item);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error: {ex}");
+        }
+    }
 
     //// GET: api/Item/555
-    //[HttpGet("{name}", Name = "GetByItemName")]
-    //public async Task<IActionResult> GetByItemName(string name)
-    //{
-    //    try
-    //    {
-    //        var item = await _repo.GetItemByName(name);
-    //        return Ok(item);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return BadRequest($"Error: {ex}");
-    //    }
-    //}
+    [HttpGet("{name}/name")]
+    public async Task<IActionResult> GetByItemName(string name)
+    {
+        try
+        {
+            var item = await _service.GetItemByName(name);
+            return Ok(item);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error: {ex}");
+        }
+    }
 
     // POST: ItemController/Create
     [HttpPost]
@@ -77,50 +77,35 @@ public class ItemController : Controller
     }
 
     // PUT: ItemController/Edit/5
-    //[HttpPut]
-    //public async Task<IActionResult> Edit(int id, Item model)
-    //{
-    //    try
-    //    {
-    //        var item = await _repo.GetItemById(id);
+    [HttpPut]
+    public async Task<IActionResult> Edit(UpdateItemDto model)
+    {
+        try
+        {
+            await _service.UpdateItemAsync(model);
 
-    //        if (item != null)
-    //        {
-    //            _repo.Update(model);
-
-    //            if (await _repo.SaveChangeAsync())
-    //                return Ok("Registro alterado com sucesso!");
-    //        }
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return BadRequest($"Error: {ex}");
-    //    }
-
-    //    return BadRequest("Não foi possível alterar o registro.");
-    //}
+            return Ok("Registro alterado com sucesso!");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error: {ex}");
+        }
+    }
 
     // POST: ItemController/Delete/5
-    //[HttpDelete]
-    //public async Task<IActionResult> Delete(int id)
-    //{
-    //    try
-    //    {
-    //        var item = await _repo.GetItemById(id);
-    //        if (item != null)
-    //        {
-    //            _repo.Delete(item);
+    [HttpDelete]
+    public async Task<IActionResult> Delete(int id)
+    {
+        try
+        {
+            await _service.DeleteItemAsync(id);
+            return Ok("Registro deletado com sucesso!");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error: {ex}");
+        }
 
-    //            if (await _repo.SaveChangeAsync())
-    //                return Ok("Registro deletado com sucesso!");
-    //        }
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return BadRequest($"Error: {ex}");
-    //    }
-
-    //    return BadRequest("Não foi possível deletar o registro.");
-
-    //}
+        return BadRequest("Não foi possível deletar o registro.");
+    }
 }
