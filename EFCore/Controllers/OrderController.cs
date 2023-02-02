@@ -1,145 +1,116 @@
-﻿using EFCore.Domain;
-using EFCore.Repository;
-using Microsoft.AspNetCore.Http;
+﻿using EFCore.Application.Contracts.Services;
+using EFCore.Application.Dtos.Client;
+using EFCore.Application.Dtos.Order;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
-namespace EFCore.WebApi.Controllers
+namespace EFCore.WebApi.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class OrderController : Controller
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class OrderController : Controller
+    private readonly IOrderService _service;
+    public OrderController(IOrderService service)
     {
-        private readonly IEFCoreRepository _repo;
-        public OrderController(IEFCoreRepository repo)
+        _service = service;
+    }
+
+    // GET: OrderController
+    [HttpGet]
+    public async Task<IActionResult> Get()
+    {
+        try
         {
-            _repo = repo;
+            var order = await _service.GetAll();
+            return Ok(order);
         }
-
-        // GET: OrderController
-        [HttpGet]
-        public async Task<IActionResult> Index()
+        catch (Exception ex)
         {
-            try
-            {
-                var order = await _repo.GetAllOrders(true);
-                return Ok(order);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error: {ex}");
-            }
+            return BadRequest($"Error: {ex}");
         }
+    }
 
-        [HttpGet("GetOrderOverview")]
-        public async Task<IActionResult> GetOrderOverview(int id)
+    //GET: ClientController/Details/5
+    [HttpGet("{id}")]
+    public async Task<IActionResult> Get(int id)
+    {
+        try
         {
-            try
-            {
-               var order = _repo.GetOrderOverview(id);
-               return Ok(order);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error: {ex}");
-            }
-        }
+            var client = await _service.GetByIdAsync(id);
 
-        // GET: api/Order/5
-        [HttpGet("GetOrderById")]
-        public async Task<IActionResult> GetOrderById(int id)
+            return Ok(client);
+        }
+        catch (Exception ex)
         {
-            try
-            {
-                var order = await _repo.GetOrderById(id);
-                return Ok(order);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error: {ex}");
-            }
+            return BadRequest($"Error: {ex}");
         }
+    }
 
-        // GET: api/Order/555
-        [HttpGet("GetByOrderNumber")]
-        public async Task<IActionResult> GetByOrderNumber(int number)
+    //// GET: api/Order/555
+    [HttpGet("{number}/order-number")]
+    public async Task<IActionResult> GetByOrderNumber(int number)
+    {
+        try
         {
-            try
-            {
-                var order = await _repo.GetOrderByNumber(number);
-                return Ok(order);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error: {ex}");
-            }
+            var order = await _service.GetOrderByNumber(number);
+            return Ok(order);
         }
-
-        // POST: OrderController/Create
-        [HttpPost]
-        public async Task<IActionResult> Create(Order model)
+        catch (Exception ex)
         {
-            try
-            {
-                _repo.Add(model);
-
-                if(await _repo.SaveChangeAsync())
-                    return Ok("Registro salvo com sucesso!");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error: {ex}");
-            }
-
-            return BadRequest("Não foi possível salvar o registro.");
+            return BadRequest($"Error: {ex}");
         }
+    }
 
-        // PUT: OrderController/Edit/5
-        [HttpPut]
-        public async Task<IActionResult> Edit(int id, Order model)
+    // POST: OrderController/Create
+    [HttpPost]
+    public async Task<IActionResult> Create(CreateOrderDto newOder)
+    {
+        try
         {
-            try
-            {
-                var order = await _repo.GetOrderById(id);
-                
-                if (order != null)
-                {
-                    _repo.Update(model);
-
-                    if (await _repo.SaveChangeAsync())
-                        return Ok("Registro alterado com sucesso!");
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error: {ex}");
-            }
-
-            return BadRequest("Não foi possível alterar o registro.");
+            await _service.CreateOrderAsync(newOder);
+            return Ok("Registro salvo com sucesso!");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error: {ex}");
         }
 
-        // POST: OrderController/Delete/5
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int id)
-        {            
-            try
-            {  
-                var order = await _repo.GetOrderById(id);              
-                if (order != null)
-                {
-                    _repo.Delete(order);
+        return BadRequest("Não foi possível salvar o registro.");
+    }
 
-                    if (await _repo.SaveChangeAsync())
-                        return Ok("Registro deletado com sucesso!");
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error: {ex}");
-            }
 
-            return BadRequest("Não foi possível deletar o registro.");
+    //// PUT: ClientController/Edit
+    [HttpPut]
+    public async Task<IActionResult> Update(UpdateOrderDto model)
+    {
+        try
+        {
+            await _service.UpdateOrderAsync(model);
 
+            return Ok("Registro alterado com sucesso!");
         }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error: {ex}");
+        }
+
+        return BadRequest("Não foi possível alterar o registro.");
+    }
+
+    // POST: ClientController/Delete/5
+    [HttpDelete]
+    public async Task<IActionResult> Delete(int id)
+    {
+        try
+        {
+            await _service.DeleteOrderAsync(id);
+            return Ok("Registro deletado com sucesso!");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error: {ex}");
+        }
+
+        return BadRequest("Não foi possível deletar o registro.");
     }
 }

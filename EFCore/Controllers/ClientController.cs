@@ -1,134 +1,117 @@
-﻿using EFCore.Domain;
-using EFCore.Repository;
-using Microsoft.AspNetCore.Http;
+﻿using EFCore.Application.Contracts.Services;
+using EFCore.Application.Dtos.Client;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
-namespace EFCore.WebApi.Controllers
+namespace EFCore.WebApi.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class ClientController : Controller
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class ClientController : Controller
+    private readonly IClientService _service;
+    public ClientController(IClientService service)
     {
-        private readonly IEFCoreRepository _repository;
-        public ClientController(IEFCoreRepository repo)
+        _service = service;
+    }
+
+    // GET: ClientController
+    [HttpGet]
+    public async Task<IActionResult> Get()
+    {
+        try
         {
-            _repository = repo;
+            var client = await _service.GetAllAsync();
+
+            return Ok(client);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error: {ex}");
+        }
+    }
+
+    //GET: ClientController/Details/5
+    [HttpGet("{id}")]
+    public async Task<IActionResult> Get(int id)
+    {
+        try
+        {
+            var client = await _service.GetByIdAsync(id);
+
+            return Ok(client);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error: {ex}");
+        }
+    }
+
+    // GET: ClientController/GetByName/name
+    [HttpGet("{name}/name")]
+    public async Task<IActionResult> Get(string name)
+    {
+        try
+        {
+            var client = await _service.GetByNameAsync(name);
+
+            return Ok(client);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error: {ex}");
+        }
+    }
+
+    // POST: ClientController/Post
+    [HttpPost]
+    public async Task<IActionResult> Create(CreateClienteDto modelClient)
+    {
+        try
+        {
+            await _service.CreateClientAsync(modelClient);
+            return Ok("Registro salvo com sucesso!");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error: {ex}");
         }
 
-        // GET: ClientController
-        [HttpGet]
-        public async Task<IActionResult> Index()
-        {
-            try
-            {
-                var client = await _repository.GetAllClients(true);
+        return BadRequest("Não foi possível salvar o registro.");
+    }
 
-                return Ok(client);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error: {ex}");
-            }
+    //// PUT: ClientController/Edit/5
+    [HttpPut]
+    public async Task<IActionResult> Update(UpdateClienteDto model)
+    {
+        try
+        {
+            await _service.UpdateClientAsync(model);
+
+            return Ok("Registro alterado com sucesso!");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error: {ex}");
         }
 
-        // GET: ClientController/Details/5
-        [HttpGet("GetClientById")]
-        public async Task<IActionResult> GetClientById(int id)
-        {
-            try
-            {
-                var client = await _repository.GetClientById(id);
+        return BadRequest("Não foi possível alterar o registro.");
+    }
 
-                return Ok(client);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error: {ex}");
-            }
+
+    // POST: ClientController/Delete/5
+    [HttpDelete]
+    public async Task<IActionResult> Delete(int id)
+    {
+        try
+        {
+            await _service.DeleteClientAsync(id);
+            return Ok("Registro deletado com sucesso!");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error: {ex}");
         }
 
-        // GET: ClientController/GetByName/name
-        [HttpGet("GetByName")]
-        public async Task<IActionResult> GetByName(string name)
-        {
-            try
-            {
-                var client = await _repository.GetClientByName(name);
-
-                return Ok(client);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error: {ex}");
-            }
-        }
-
-        // POST: ClientController/Post
-        [HttpPost]
-        public async Task<IActionResult> Create(Client modelClient)
-        {
-            try
-            {
-                _repository.Add(modelClient);
-
-                if (await _repository.SaveChangeAsync())
-                    return Ok("Registro salvo com sucesso!");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error: {ex}");
-            }
-
-            return BadRequest("Não foi possível salvar o registro.");
-        }
-
-        // PUT: ClientController/Edit/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Client model)
-        {
-            try
-            {
-                var client = await _repository.GetClientById(id);
-
-                if (client != null)
-                {
-                    _repository.Update(model);
-
-                    if (await _repository.SaveChangeAsync())
-                        return Ok("Registro alterado com sucesso!");
-                }                
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error: {ex}");
-            }
-
-            return BadRequest("Não foi possível alterar o registro.");
-        }
-
-
-        // POST: ClientController/Delete/5
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int id)
-        {
-            try
-            {
-                var client = await _repository.GetClientById(id);
-                if (client != null)
-                {
-                    _repository.Delete(client);
-
-                    if (await _repository.SaveChangeAsync())
-                        return Ok("Registro deletado com sucesso!");
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error: {ex}");
-            }
-
-            return BadRequest("Não foi possível deletar o registro.");
-        }
+        return BadRequest("Não foi possível deletar o registro.");
     }
 }

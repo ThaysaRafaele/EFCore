@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="7.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.2">
@@ -22,8 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EFCore.Application\EFCore.Application.csproj" />
     <ProjectReference Include="..\EFCore.Domain\EFCore.Domain.csproj" />
-    <ProjectReference Include="..\EFCore.Repository\EFCore.Repository.csproj" />
+    <ProjectReference Include="..\EFCore.Repository\EFCore.Data.csproj" />
   </ItemGroup>
 
 </Project>
