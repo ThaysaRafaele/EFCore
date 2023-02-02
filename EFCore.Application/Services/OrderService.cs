@@ -38,9 +38,9 @@ public class OrderService : IOrderService
         try
         {
             var orders = await _orderRepository.GetAllOrders();
-            var clientsDto = _mapper.Map<List<OrderDto>>(orders);
+            var ordersDto = _mapper.Map<List<OrderDto>>(orders);
 
-            return clientsDto;
+            return ordersDto;
         }
         catch (Exception ex)
         {
