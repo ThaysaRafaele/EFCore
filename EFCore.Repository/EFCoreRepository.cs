@@ -1,4 +1,5 @@
-﻿using EFCore.Domain;
+﻿using Abp.UI;
+using EFCore.Domain;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -70,6 +71,31 @@ namespace EFCore.Repository
             return await query.ToArrayAsync();
         }
 
+        public string GetOrderOverview(int id)
+        {
+            IQueryable<Order> query = _context.Orders
+                                            .Include(o => o.OrdersItems)
+                                            .ThenInclude(i => i.Item)
+                                            .Where(o => o.Id == id);
+
+            double total =  0.0;
+
+            foreach (var item in query.Select(e => e.OrdersItems))
+            {
+                total = item.Sum(e => e.Item.UnitPrice); // valor total do pedido
+            }
+
+            var count = query.Select(e => e.OrdersItems.Count()).FirstOrDefault(); //quantidade de itens no pedido
+
+            query.Select(e => e.OrdersItems.Select(o => o.Item.Name)); //retornando itens do pedido
+
+            var messageTotal = "Valor Total: "+total;
+            var messageItemsCount = "Quantidade de Itens: " + count;
+            var messageItems = "Itens: " + query.Select(e => e.OrdersItems.Select(o => o.Item.Name)).ToString();
+
+            return (messageTotal+" / "+ messageItemsCount + " / " + messageItems);
+        }
+
         public async Task<IEnumerable<Order>> GetAllOrders(bool includeItems = false)
         {
             IQueryable<Order> query = _context.Orders;
@@ -77,7 +103,7 @@ namespace EFCore.Repository
             if (includeItems)
             {
                 query = _context.Orders.Include(o => o.OrdersItems)
-                    .ThenInclude(i => i.Item);
+                            .ThenInclude(i => i.Item);
             }
 
             query = query.AsNoTracking().OrderBy(c => c.Id);
@@ -97,7 +123,7 @@ namespace EFCore.Repository
 
             query = query.AsNoTracking().OrderBy(c => c.Id);
 
-            return await query.FirstOrDefaultAsync();
+            return await query.FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<Order[]> GetOrderByNumber(int number)

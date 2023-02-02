@@ -19,6 +19,7 @@ namespace EFCore.Repository
         Task<Client> GetClientById(int id);
         Task<Client[]> GetClientByName(string name);
 
+        string GetOrderOverview(int id);
         Task<IEnumerable<Order>> GetAllOrders(bool includeItems = false);
         Task<Order> GetOrderById(int id, bool includeItems = false);
         Task<Order[]> GetOrderByNumber(int number);

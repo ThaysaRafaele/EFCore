@@ -31,7 +31,7 @@ namespace EFCore.WebApi.Controllers
         }
 
         // GET: api/Item/5
-        [HttpGet("{id}", Name = "GetItem")]
+        [HttpGet("GetItemById")]
         public async Task<IActionResult> GetItemById(int id)
         {
             try
@@ -46,7 +46,7 @@ namespace EFCore.WebApi.Controllers
         }
 
         // GET: api/Item/555
-        [HttpGet("{name}", Name = "GetByItemName")]
+        [HttpGet("GetByItemName")]
         public async Task<IActionResult> GetByItemName(string name)
         {
             try

@@ -31,8 +31,22 @@ namespace EFCore.WebApi.Controllers
             }
         }
 
+        [HttpGet("GetOrderOverview")]
+        public async Task<IActionResult> GetOrderOverview(int id)
+        {
+            try
+            {
+               var order = _repo.GetOrderOverview(id);
+               return Ok(order);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex}");
+            }
+        }
+
         // GET: api/Order/5
-        [HttpGet("{id}", Name = "GetOrder")]
+        [HttpGet("GetOrderById")]
         public async Task<IActionResult> GetOrderById(int id)
         {
             try
@@ -47,7 +61,7 @@ namespace EFCore.WebApi.Controllers
         }
 
         // GET: api/Order/555
-        [HttpGet("{number}", Name = "GetByOrderNumber")]
+        [HttpGet("GetByOrderNumber")]
         public async Task<IActionResult> GetByOrderNumber(int number)
         {
             try

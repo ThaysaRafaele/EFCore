@@ -33,7 +33,7 @@ namespace EFCore.WebApi.Controllers
         }
 
         // GET: ClientController/Details/5
-        [HttpGet("{id}", Name = "Details")]
+        [HttpGet("GetClientById")]
         public async Task<IActionResult> GetClientById(int id)
         {
             try
@@ -49,7 +49,7 @@ namespace EFCore.WebApi.Controllers
         }
 
         // GET: ClientController/GetByName/name
-        [HttpGet("{name}", Name = "GetByName")]
+        [HttpGet("GetByName")]
         public async Task<IActionResult> GetByName(string name)
         {
             try
