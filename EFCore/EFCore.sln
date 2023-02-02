@@ -3,16 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32126.317
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCore.WebApi", "EFCore.WebApi.csproj", "{84495864-584B-4095-BF3A-4BEDD5203CEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCore.WebApi", "EFCore.WebApi.csproj", "{84495864-584B-4095-BF3A-4BEDD5203CEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCore.Domain", "..\EFCore.Domain\EFCore.Domain.csproj", "{F1039EA2-C9B0-4AE7-A370-A6E20696A58E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCore.Domain", "..\EFCore.Domain\EFCore.Domain.csproj", "{F1039EA2-C9B0-4AE7-A370-A6E20696A58E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCore.Repository", "..\EFCore.Repository\EFCore.Repository.csproj", "{D4420DC6-30E9-4E46-A5F5-27EF3072CD83}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCore.Data", "..\EFCore.Repository\EFCore.Data.csproj", "{D4420DC6-30E9-4E46-A5F5-27EF3072CD83}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DE7D8728-D2B3-4641-912E-A05BF847AD6F}"
-	ProjectSection(SolutionItems) = preProject
-		Startup.cs = Startup.cs
-	EndProjectSection
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Prsentation", "1. Prsentation", "{57162BC4-17E1-4C2F-A57D-5E5A219EE449}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Application", "2. Application", "{D2122CF5-CEF9-4FC0-B888-17C00FC859AE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Domain", "3. Domain", "{1A5522EC-046B-474B-BDA6-76CC1540E7D8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Data", "4. Data", "{7B56AEC7-47CB-4508-A9EA-8B398B01E2F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCore.Application", "..\EFCore.Application\EFCore.Application.csproj", "{571F4244-E9FF-4C18-A86C-611B191EAA5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,9 +37,19 @@ Global
 		{D4420DC6-30E9-4E46-A5F5-27EF3072CD83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4420DC6-30E9-4E46-A5F5-27EF3072CD83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4420DC6-30E9-4E46-A5F5-27EF3072CD83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{571F4244-E9FF-4C18-A86C-611B191EAA5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{571F4244-E9FF-4C18-A86C-611B191EAA5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{571F4244-E9FF-4C18-A86C-611B191EAA5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{571F4244-E9FF-4C18-A86C-611B191EAA5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{84495864-584B-4095-BF3A-4BEDD5203CEC} = {57162BC4-17E1-4C2F-A57D-5E5A219EE449}
+		{F1039EA2-C9B0-4AE7-A370-A6E20696A58E} = {1A5522EC-046B-474B-BDA6-76CC1540E7D8}
+		{D4420DC6-30E9-4E46-A5F5-27EF3072CD83} = {7B56AEC7-47CB-4508-A9EA-8B398B01E2F2}
+		{571F4244-E9FF-4C18-A86C-611B191EAA5A} = {D2122CF5-CEF9-4FC0-B888-17C00FC859AE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F770B315-A9CD-4AAF-9EBA-4AE7D23D99AD}
